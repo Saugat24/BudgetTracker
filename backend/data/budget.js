@@ -1,0 +1,42 @@
+const INITIAL = [
+  {
+    id: 1,
+    description: "Salary",
+    amount: 50000,
+    type: "income",
+    category: "Salary",
+    date: "2025-06-01",
+  },
+  {
+    id: 2,
+    description: "Groceries",
+    amount: 2500,
+    type: "expense",
+    category: "Food",
+    date: "2025-06-02",
+  },
+  {
+    id: 3,
+    description: "Freelance Work",
+    amount: 12000,
+    type: "income",
+    category: "Freelance",
+    date: "2025-06-03",
+  },
+  {
+    id: 4,
+    description: "Electricity Bill",
+    amount: 1800,
+    type: "expense",
+    category: "Utilities",
+    date: "2025-06-04",
+  },
+  {
+    id: 5,
+    description: "Internet Bill",
+    amount: 1200,
+    type: "expense",
+    category: "Utilities",
+    date: "2025-06-05",
+  },
+];

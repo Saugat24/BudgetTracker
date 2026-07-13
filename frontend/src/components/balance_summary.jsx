@@ -1,7 +1,4 @@
-function BalanceSummary() {
-  const income = 62000;
-  const expense = 5500;
-  const balance = income - expense;
+function BalanceSummary({ income, expenses, balance }) {
 
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -15,7 +12,7 @@ function BalanceSummary() {
 
         <div>
           <p className="text-gray-500">Expense</p>
-          <p className="text-red-600 text-xl font-bold">Rs. {expense}</p>
+          <p className="text-red-600 text-xl font-bold">Rs. {expenses}</p>
         </div>
       </div>
 
