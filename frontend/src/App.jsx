@@ -4,86 +4,45 @@ import TransactionList from "./components/transaction_list";
 import AddTransactionForm from "./components/AddTransactionForm";
 import CategoryChart from "./components/CategoryChart";
 
-const INITIAL = [
-  {
-    id: 1,
-    description: "Salary",
-    amount: 50000,
-    type: "income",
-    category: "Salary",
-    date: "2025-06-01",
-  },
-  {
-    id: 2,
-    description: "Groceries",
-    amount: 2500,
-    type: "expense",
-    category: "Food",
-    date: "2025-06-02",
-  },
-  {
-    id: 3,
-    description: "Freelance Work",
-    amount: 12000,
-    type: "income",
-    category: "Freelance",
-    date: "2025-06-03",
-  },
-  {
-    id: 4,
-    description: "Electricity Bill",
-    amount: 1800,
-    type: "expense",
-    category: "Utilities",
-    date: "2025-06-04",
-  },
-  {
-    id: 5,
-    description: "Internet Bill",
-    amount: 1200,
-    type: "expense",
-    category: "Utilities",
-    date: "2025-06-05",
-  },
-];
+const API = "http://localhost:3001/api/transactions";
 
 function App() {
-  const [transactions, setTransactions] = useState(INITIAL);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    fetch(API)
+      .then((r) => r.json())
+      .then(setTransactions);
+  }, []);
 
   const { income, expenses, balance, categoryData } = useMemo(() => {
-    const income = transactions
-      .filter((t) => t.type === "income")
-      .reduce((s, t) => s + t.amount, 0);
-    const expenses = transactions
-      .filter((t) => t.type === "expense")
-      .reduce((s, t) => s + t.amount, 0);
+    const income = transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
+    const expenses = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
     const categoryMap = {};
-    transactions
-      .filter((t) => t.type === "expense")
-      .forEach((t) => {
-        categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
-      });
+    transactions.filter((t) => t.type === "expense").forEach((t) => {
+      categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
+    });
     const categoryData = Object.entries(categoryMap).map(([category, amount]) => ({ category, amount }));
     return { income, expenses, balance: income - expenses, categoryData };
   }, [transactions]);
 
-  useEffect(() => {
-    document.title = `Balance: Rs. ${balance}`;
-  }, [balance]);
+  useEffect(() => { document.title = `Balance: Rs. ${balance}`; }, [balance]);
 
-  const handleDelete = (id) => setTransactions((prev) => prev.filter((t) => t.id !== id));
+  const handleAdd = (t) => setTransactions((prev) => [t, ...prev]);
+  const handleDelete = async (id) => {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    setTransactions((prev) => prev.filter((t) => t._id !== id));
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-6">Budget Tracker</h1>
-
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Budget Tracker</h1>
+          <p className="text-gray-400 text-sm mt-1">Manage your income & expenses</p>
+        </div>
         <BalanceSummary income={income} expenses={expenses} balance={balance} />
-
-        <AddTransactionForm
-          onAdd={(t) => setTransactions((prev) => [t, ...prev])}
-        />
-
+        <AddTransactionForm onAdd={handleAdd} />
         <CategoryChart data={categoryData} />
         <TransactionList transactions={transactions} onDelete={handleDelete} />
       </div>

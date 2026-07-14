@@ -1,24 +1,17 @@
 function BalanceSummary({ income, expenses, balance }) {
-
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-      <h2 className="text-2xl font-semibold mb-4">Balance Summary</h2>
-
-      <div className="flex justify-between mb-4">
-        <div>
-          <p className="text-gray-500">Income</p>
-          <p className="text-green-600 text-xl font-bold">Rs. {income}</p>
-        </div>
-
-        <div>
-          <p className="text-gray-500">Expense</p>
-          <p className="text-red-600 text-xl font-bold">Rs. {expenses}</p>
-        </div>
+    <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Income</p>
+        <p className="text-xl font-bold text-emerald-500 mt-1">Rs. {income.toLocaleString()}</p>
       </div>
-
-      <div className="border-t pt-4">
-        <p className="text-gray-500">Current Balance</p>
-        <p className="text-2xl font-bold text-blue-600">Rs. {balance}</p>
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Expenses</p>
+        <p className="text-xl font-bold text-rose-500 mt-1">Rs. {expenses.toLocaleString()}</p>
+      </div>
+      <div className="bg-indigo-600 rounded-2xl p-5 shadow-sm">
+        <p className="text-xs text-indigo-200 uppercase tracking-wide font-medium">Balance</p>
+        <p className="text-xl font-bold text-white mt-1">Rs. {balance.toLocaleString()}</p>
       </div>
     </div>
   );

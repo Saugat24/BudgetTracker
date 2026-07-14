@@ -1,23 +1,39 @@
-import * as Transaction from "../models/transactionModel.js";
+import Transaction from "../models/transactionModel.js";
 
-export const getTransactions = (req, res) => {
-  res.json(Transaction.getAll());
+export const getTransactions = async (req, res) => {
+  const transactions = await Transaction.find().sort({ createdAt: -1 });
+  res.json(transactions);
 };
 
-export const createTransaction = (req, res) => {
-  const { type, amount, category, description } = req.body;
-  if (!type || !amount || !category) {
-    return res.status(400).json({ error: "type, amount, and category are required" });
-  }
-  res.status(201).json(Transaction.create({ type, amount, category, description }));
+export const createTransaction = async (req, res) => {
+  const { type, amount, category, description, date } = req.body;
+  const t = await Transaction.create({ type, amount: Number(amount), category, description, date });
+  res.status(201).json(t);
 };
 
-export const deleteTransaction = (req, res) => {
-  const deleted = Transaction.remove(Number(req.params.id));
+export const updateTransaction = async (req, res) => {
+  const { type, amount, category, description, date } = req.body;
+  const updated = await Transaction.findByIdAndUpdate(
+    req.params.id,
+    { type, amount: Number(amount), category, description, date },
+    { new: true, runValidators: true }
+  );
+  if (!updated) return res.status(404).json({ error: "Transaction not found" });
+  res.json(updated);
+};
+
+export const deleteTransaction = async (req, res) => {
+  const deleted = await Transaction.findByIdAndDelete(req.params.id);
   if (!deleted) return res.status(404).json({ error: "Transaction not found" });
   res.json(deleted);
 };
 
-export const getSummary = (req, res) => {
-  res.json(Transaction.getSummary());
+export const getSummary = async (req, res) => {
+  const transactions = await Transaction.find();
+  const income   = transactions.filter((t) => t.type === "income") .reduce((s, t) => s + t.amount, 0);
+  const expenses = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+  const byCategory = transactions
+    .filter((t) => t.type === "expense")
+    .reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + t.amount; return acc; }, {});
+  res.json({ income, expenses, balance: income - expenses, byCategory });
 };

@@ -1,0 +1,23 @@
+{
+  "name": "budgettracker",
+  "version": "1.0.0",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saugat24/BudgetTracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saugat24/BudgetTracker/issues"
+  },
+  "homepage": "https://github.com/Saugat24/BudgetTracker#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
