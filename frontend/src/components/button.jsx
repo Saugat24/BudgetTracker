@@ -1,16 +1,11 @@
-const API = "http://localhost:3001/api/transactions";
+import api from "../api/axios";
 
 function Button({ children, onClick, type = "button", className = "", onAdd, form, setForm, empty }) {
   const handleClick = async () => {
     if (onAdd && form) {
       if (!form.amount || !form.date) return;
-      const res = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, amount: parseFloat(form.amount) }),
-      });
-      const saved = await res.json();
-      onAdd(saved);
+      const { data } = await api.post("/transactions", { ...form, amount: parseFloat(form.amount) });
+      onAdd(data);
       setForm(empty);
     } else if (onClick) {
       onClick();
