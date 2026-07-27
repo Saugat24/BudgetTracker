@@ -15,7 +15,7 @@ app.use(
     origin: (origin, callback) => {
       if (
         !origin ||
-        ["http://localhost:5173", "https://yourdomain.com"].includes(origin)
+        ["http://localhost:5173", process.env.FRONTEND_URL].includes(origin)
       ) {
         return callback(null, true);
       }
