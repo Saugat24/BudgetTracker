@@ -10,19 +10,27 @@ import { protect } from "./src/middleware/authMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || ["http://localhost:5173", "https://yourdomain.com"].includes(origin)) {
-      return callback(null, true);
-    }
-    callback(new Error("CORS origin not allowed"));
-  },
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        ["http://localhost:5173", "https://yourdomain.com"].includes(origin)
+      ) {
+        return callback(null, true);
+      }
+      callback(new Error("CORS origin not allowed"));
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", protect, transactionRoutes);
 
-connectDB().then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)));
+connectDB().then(() =>
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`)),
+);
