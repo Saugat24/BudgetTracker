@@ -1,31 +1,56 @@
 import { useState, useEffect, useMemo } from "react";
 import api from "../api/axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import BalanceSummary from "../components/balance_summary";
 import TransactionList from "../components/transaction_list";
 import AddTransactionForm from "../components/AddTransactionForm";
 import CategoryChart from "../components/CategoryChart";
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 function MonthFilter({ selected, onChange }) {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
 
-  const pills = useMemo(() =>
-    MONTHS.map((label, i) => {
-      const val = `${year}-${String(i + 1).padStart(2, "0")}`;
-      return { label, val };
-    }), [year]
+  const pills = useMemo(
+    () =>
+      MONTHS.map((label, i) => {
+        const val = `${year}-${String(i + 1).padStart(2, "0")}`;
+        return { label, val };
+      }),
+    [year],
   );
 
   return (
     <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-3">
-        <button onClick={() => setYear((y) => y - 1)} className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-sm transition-colors">‹</button>
+        <button
+          onClick={() => setYear((y) => y - 1)}
+          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-sm transition-colors"
+        >
+          ‹
+        </button>
         <span className="text-sm font-semibold text-gray-700">{year}</span>
-        <button onClick={() => setYear((y) => y + 1)} className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-sm transition-colors">›</button>
+        <button
+          onClick={() => setYear((y) => y + 1)}
+          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-sm transition-colors"
+        >
+          ›
+        </button>
       </div>
       <div className="grid grid-cols-6 gap-2">
         {pills.map(({ label, val }) => (
@@ -50,7 +75,12 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
-  const [summary, setSummary] = useState({ income: 0, expenses: 0, balance: 0, byCategory: [] });
+  const [summary, setSummary] = useState({
+    income: 0,
+    expenses: 0,
+    balance: 0,
+    byCategory: [],
+  });
   const [month, setMonth] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -73,8 +103,14 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => { fetchAll(month); }, [month]);
-  useEffect(() => { document.title = `Balance: Rs. ${summary.balance}`; }, [summary.balance]);
+  // The fetch flow intentionally updates local loading/error state from an effect.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchAll(month);
+  }, [month]);
+  useEffect(() => {
+    document.title = `Balance: Rs. ${summary.balance}`;
+  }, [summary.balance]);
 
   const handleAdd = (t) => {
     setTransactions((prev) => [t, ...prev]);
@@ -124,10 +160,17 @@ export default function Dashboard() {
           <p className="text-center text-sm text-gray-400 py-12">Loading...</p>
         ) : (
           <>
-            <BalanceSummary income={summary.income} expenses={summary.expenses} balance={summary.balance} />
+            <BalanceSummary
+              income={summary.income}
+              expenses={summary.expenses}
+              balance={summary.balance}
+            />
             <AddTransactionForm onAdd={handleAdd} />
             <CategoryChart data={summary.byCategory} />
-            <TransactionList transactions={transactions} onDelete={handleDelete} />
+            <TransactionList
+              transactions={transactions}
+              onDelete={handleDelete}
+            />
           </>
         )}
       </div>
