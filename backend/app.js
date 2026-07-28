@@ -27,6 +27,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/", (_req, res) => res.json({ message: "Budget Tracker API is running" }));
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", protect, transactionRoutes);
