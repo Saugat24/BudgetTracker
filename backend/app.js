@@ -11,13 +11,30 @@ import { protect } from "./src/middleware/authMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = new Set([
+  "http://localhost:5173",
+  ...(process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+]);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.has(origin)) return true;
+
+  try {
+    const { hostname } = new URL(origin);
+    return hostname.endsWith(".netlify.app");
+  } catch {
+    return false;
+  }
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        ["http://localhost:5173", process.env.FRONTEND_URL].includes(origin)
-      ) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
       callback(new Error("CORS origin not allowed"));
@@ -28,7 +45,9 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (_req, res) => res.json({ message: "Budget Tracker API is running" }));
+app.get("/", (_req, res) =>
+  res.json({ message: "Budget Tracker API is running" }),
+);
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", protect, transactionRoutes);

@@ -11,11 +11,11 @@ A full-stack personal budget tracker with AI-powered spending insights.
 
 ## Tech Stack
 
-| Layer    | Tech                              |
-|----------|-----------------------------------|
-| Frontend | React + Vite + Tailwind CSS       |
-| Backend  | Node.js + Express + MongoDB       |
-| AI       | Groq (llama-3.3-70b-versatile)    |
+| Layer    | Tech                           |
+| -------- | ------------------------------ |
+| Frontend | React + Vite + Tailwind CSS    |
+| Backend  | Node.js + Express + MongoDB    |
+| AI       | Groq (llama-3.3-70b-versatile) |
 
 ## Getting Started
 
@@ -36,6 +36,16 @@ FRONTEND_URL=http://localhost:5173
 GROQ_API_KEY=your_groq_api_key
 ```
 
+For deployment, set `FRONTEND_URL` to your Netlify site URL. If you use more than one frontend origin, separate them with commas in `FRONTEND_URLS`.
+
+Create `frontend/.env` for local development:
+
+```env
+VITE_API_URL=http://localhost:3001/api
+```
+
+On Netlify, add `VITE_API_URL` in the site environment settings and point it at your Render backend, for example `https://your-backend.onrender.com/api`.
+
 ```bash
 npm run dev
 ```
@@ -54,13 +64,13 @@ The **Get AI Insights** button on the dashboard sends the current month's transa
 
 ## API Endpoints
 
-| Method | Endpoint                  | Description                  |
-|--------|---------------------------|------------------------------|
-| POST   | /api/auth/register        | Register user                |
-| POST   | /api/auth/login           | Login user                   |
-| GET    | /api/transactions         | Get transactions (+ filter)  |
-| POST   | /api/transactions         | Create transaction           |
-| PUT    | /api/transactions/:id     | Update transaction           |
-| DELETE | /api/transactions/:id     | Delete transaction           |
-| GET    | /api/transactions/summary | Monthly summary              |
-| POST   | /api/ai/analyse           | AI spending analysis         |
+| Method | Endpoint                  | Description                 |
+| ------ | ------------------------- | --------------------------- |
+| POST   | /api/auth/register        | Register user               |
+| POST   | /api/auth/login           | Login user                  |
+| GET    | /api/transactions         | Get transactions (+ filter) |
+| POST   | /api/transactions         | Create transaction          |
+| PUT    | /api/transactions/:id     | Update transaction          |
+| DELETE | /api/transactions/:id     | Delete transaction          |
+| GET    | /api/transactions/summary | Monthly summary             |
+| POST   | /api/ai/analyse           | AI spending analysis        |
