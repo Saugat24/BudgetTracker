@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./src/config/db.js";
 import transactionRoutes from "./src/routes/transactionRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
+import aiRoutes from "./src/routes/aiRoutes.js";
 import { protect } from "./src/middleware/authMiddleware.js";
 
 const app = express();
@@ -31,6 +32,7 @@ app.get("/", (_req, res) => res.json({ message: "Budget Tracker API is running" 
 app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", protect, transactionRoutes);
+app.use("/api/ai", protect, aiRoutes);
 
 connectDB().then(() =>
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`)),

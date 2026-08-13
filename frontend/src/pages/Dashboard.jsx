@@ -6,6 +6,7 @@ import BalanceSummary from "../components/balance_summary";
 import TransactionList from "../components/transaction_list";
 import AddTransactionForm from "../components/AddTransactionForm";
 import CategoryChart from "../components/CategoryChart";
+import AIInsights from "../components/AIInsights";
 
 const MONTHS = [
   "Jan",
@@ -167,6 +168,7 @@ export default function Dashboard() {
             />
             <AddTransactionForm onAdd={handleAdd} />
             <CategoryChart data={summary.byCategory} />
+            <AIInsights transactions={transactions} month={month} />
             <TransactionList
               transactions={transactions}
               onDelete={handleDelete}

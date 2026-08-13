@@ -1,16 +1,66 @@
-# React + Vite
+# Budget Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack personal budget tracker with AI-powered spending insights.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Authentication** — JWT-based register/login
+- **Transactions** — Add, edit, delete income & expense entries
+- **Dashboard** — Monthly filter, balance summary, category chart
+- **AI Insights** — Gemini-powered spending analysis with actionable advice
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer    | Tech                              |
+|----------|-----------------------------------|
+| Frontend | React + Vite + Tailwind CSS       |
+| Backend  | Node.js + Express + MongoDB       |
+| AI       | Groq (llama-3.3-70b-versatile)    |
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Backend
+
+```bash
+cd backend
+npm install
+```
+
+Create `backend/.env`:
+
+```env
+PORT=3001
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=http://localhost:5173
+GROQ_API_KEY=your_groq_api_key
+```
+
+```bash
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## AI Insights
+
+The **Get AI Insights** button on the dashboard sends the current month's transactions to `POST /api/ai/analyse`. The backend crafts a prompt for Groq (llama-3.3-70b-versatile) as a financial advisor and returns 4–6 bullet points of personalised spending advice.
+
+## API Endpoints
+
+| Method | Endpoint                  | Description                  |
+|--------|---------------------------|------------------------------|
+| POST   | /api/auth/register        | Register user                |
+| POST   | /api/auth/login           | Login user                   |
+| GET    | /api/transactions         | Get transactions (+ filter)  |
+| POST   | /api/transactions         | Create transaction           |
+| PUT    | /api/transactions/:id     | Update transaction           |
+| DELETE | /api/transactions/:id     | Delete transaction           |
+| GET    | /api/transactions/summary | Monthly summary              |
+| POST   | /api/ai/analyse           | AI spending analysis         |
